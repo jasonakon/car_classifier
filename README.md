@@ -31,7 +31,8 @@ You’ll need have the following installed:
 ## Trained Model:
 Model can be found at: “car_classifier/trained_model/grab_model/”
 <br />
-#### Full complete model with checkpoint can be downloaded at : https://drive.google.com/open?id=1XpZlvwdRf9vINymxMu4dW4_B8YkZQrVk
+<br />
+Full complete model with checkpoint can be downloaded at : https://drive.google.com/open?id=1XpZlvwdRf9vINymxMu4dW4_B8YkZQrVk
 <br />
 ## How to?
 Head into working directory: “car_classifier/”:
