@@ -11,13 +11,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--input', type=str, default=0,required=True)
 args = parser.parse_args()
 
-# This is needed since the working directory is the object_detection folder.
-sys.path.append('..')
-
-# Import utilites
-from utils import label_map_util
-from utils import visualization_utils as vis_util
-
 ##############################
 ## Declare requirement inputs:
 ##############################
@@ -27,16 +20,11 @@ CWD_PATH = os.getcwd()
 # Path to your inference graph:
 PATH_TO_INFERENCE_MODEL = os.path.join(CWD_PATH,MODEL_NAME,'frozen_inference_graph.pb')
 # Path to your label_map:
-PATH_TO_LABELS = os.path.join(CWD_PATH,MODEL_NAME,'label_map.pbtxt')
+PATH_TO_LABELS = os.path.join(CWD_PATH,MODEL_NAME,'labels.txt')
 # Number of classes:
 NUM_CLASSES = 196
 # Path to your video input:
 PATH_TO_VIDEO = os.path.join("test_videos",args.input)
-
-## Load the label map.
-label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
-categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
-category_index = label_map_util.create_category_index(categories)
 
 ##############################################
 ## Load the Tensorflow model into new session:
@@ -70,15 +58,29 @@ camera = cv2.VideoCapture(PATH_TO_VIDEO)
 ret = camera.set(3,1280)
 ret = camera.set(4,720)
 
+# Read available classes from label:
+def read_label(file_path):
+  with open(file_path, 'r') as f:
+    lines = f.readlines()
+    label_list = []
+    for line in lines:
+        label_list.append(line[:-1])
+    return label_list
+
 ################################################
 ## Start classification and video playback:
 ################################################
+# Declare the min threshold % for classification:
+min_thres_classify = 0.5
+
 while(True):
     # Initiate clock (fps):
     t_start = cv2.getTickCount()
 
     # Read video frames into single column RBG array using cv:
     ret, frame = camera.read()
+    # Get shapes from images:
+    frame_h, frame_w, channels = frame.shape
     frame_expanded = np.expand_dims(frame, axis=0)
 
    # Perform classification based on inference graph and generate correspoding output (boxes,scores,classes,num):
@@ -86,17 +88,29 @@ while(True):
         [detection_boxes, detection_scores, detection_classes, num_detections],
         feed_dict={image_tensor: frame_expanded})
 
-    # Using Tensorflow Object Detection API to draw the frame rectangle in real-time:
-    # Lower down the min_score_thresh, if its difficult to show any output:
-    vis_util.visualize_boxes_and_labels_on_image_array(
-        frame,
-        np.squeeze(boxes),
-        np.squeeze(classes).astype(np.int32),
-        np.squeeze(scores),
-        category_index,
-        use_normalized_coordinates=True,
-        line_thickness=8,
-        min_score_thresh=0.7)
+    # Read labels to acquire all classes values:
+    labels = read_label(PATH_TO_LABELS)
+
+    # Tabulate parameters from prediction:
+    for i in range(int(num)):
+        # Boxes coordinate:
+        top, left, bottom, right = boxes[0][i]
+        # Classified classes, reason to deduct by 1 to make sure the index start from 0 instead of 1:
+        cur_class = int(classes[0][i]) - 1
+        # Current score %:
+        cur_score = scores[0][i]
+        
+        # Make sure only output classes with confidence which more than 0.5:
+        if cur_score > min_thres_classify:
+          # Resize the coordinate based on the image size ratio:
+          x_min = left * frame_w
+          y_min = bottom * frame_h
+          x_max = right * frame_w
+          y_max = top * frame_h
+
+          cv2.rectangle(frame, (int(x_min), int(y_min)), (int(x_max), int(y_max)), (255,0,0), 2)
+          output_class = str(labels[cur_class]) + " : " + str(cur_score)
+          cv2.putText(frame,output_class, (int(x_min),int(y_min)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,0))
 
     # Show FPS in video_playback:
     cv2.putText(frame,"FPS: {0:.2f}".format(frame_rates),(30,50),font,1,(255,255,0),2,cv2.LINE_AA)
