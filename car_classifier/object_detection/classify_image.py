@@ -93,7 +93,7 @@ while(True):
         # Make sure the program never quit randomly
         continue
     # Declare font use for labeling in image:
-    font_calibri = ImageFont.truetype("./fonts/Calibri.ttf", size=20)
+    font_calibri = ImageFont.truetype("./utils/fonts/Calibri.ttf", size=20)
 
     # Perform classification based on inference graph and generate correspoding output (boxes,scores,classes,num):
     (boxes, scores, classes, num) = sess.run(
