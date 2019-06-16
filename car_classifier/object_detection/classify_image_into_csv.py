@@ -12,10 +12,10 @@ import csv
 #Path to your test image:
 PATH_TO_TEST_IMAGES_DIR = 'test_images'
 #Path to your model:
-MODEL_NAME = 'trained_models\grab_model'
+MODEL_NAME = os.path.join("trained_models","grab_model")
 CWD_PATH = os.getcwd()
 #Path to your inference graph:
-PATH_TO_CKPT = os.path.join(CWD_PATH,MODEL_NAME,'frozen_inference_graph.pb')
+PATH_TO_INFERENCE_MODEL = os.path.join(CWD_PATH,MODEL_NAME,'frozen_inference_graph.pb')
 #Path to your label_map:
 PATH_TO_LABELS = os.path.join(CWD_PATH,MODEL_NAME,'labels.txt')
 
@@ -25,14 +25,14 @@ PATH_TO_LABELS = os.path.join(CWD_PATH,MODEL_NAME,'labels.txt')
 detection_graph = tf.Graph()
 with detection_graph.as_default():
     od_graph_def = tf.GraphDef()
-    with tf.gfile.GFile(PATH_TO_CKPT, 'rb') as fid:
+    with tf.gfile.GFile(PATH_TO_INFERENCE_MODEL, 'rb') as fid:
         serialized_graph = fid.read()
         od_graph_def.ParseFromString(serialized_graph)
         tf.import_graph_def(od_graph_def, name='')
     sess = tf.Session(graph=detection_graph)
 
 ######################################################################
-## Get all the output tensors from the model (boxes,class,scores,num):
+## Initiate output tensors from the model (boxes,class,scores,num):
 ######################################################################
 image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
 detection_boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
@@ -64,7 +64,7 @@ csv_header = ['filename','predict_1','confidence_1','predict_2','confidence_2','
 ################################
 ## Execute image classification:
 ################################
-with open("model_classify_result.csv",'w') as resultFile:
+with open("car_classify_output.csv",'w') as resultFile:
     # Initialize CSV writeups:
     wr = csv.writer(resultFile, delimiter=",", lineterminator="\n")
     wr.writerow(csv_header)
