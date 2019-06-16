@@ -8,7 +8,7 @@ import sys
 
 # Declare input argument parser:
 parser = argparse.ArgumentParser()
-parser.add_argument('--input', type=str, default=0)
+parser.add_argument('--input', type=str, default=0,required=True)
 args = parser.parse_args()
 
 # This is needed since the working directory is the object_detection folder.
