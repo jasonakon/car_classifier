@@ -29,10 +29,10 @@ You’ll need have the following installed:
 •	Windows/Ubuntu
 <br />
 ## Trained Model:
-Model can be found at: “car_classifier/object_detection/trained_model/grab_model/”
+Model can be found at: “car_classifier/trained_model/grab_model/”
 <br />
 ## How to?
-Head into working directory: “car_classifier/object_detection/”:
+Head into working directory: “car_classifier/”:
 <br />
 Then, this project provides 3 different methods of classification based on your input preferences:
 <br />
@@ -55,11 +55,10 @@ This method allows you to generate all the prediction output based on your test 
 2.  Run “classify_image_into_csv.py” using python
 3.  Observe the command log and wait for it to generate all outputs
 4.  Once successful, proceed to view the “car_classify_output.csv”
-<img src="car_classifier/source_etc/2.jpg">
 <img src="car_classifier/source_etc/3.jpg">
 
 ### Method 3: Car detection (videos):
-This method uses Tensorflow Object Detection API which enable its utility feature to predict output in real-time video playback:
+This method enables its utility feature to predict output in real-time video playback:
 <br />
 1.	Insert your test dataset (videos) into the folder “test_videos”
 2.	Run “classify_video.py” using python with the command:
