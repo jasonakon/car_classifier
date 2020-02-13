@@ -1,13 +1,9 @@
-# Grab Car Classifier
-Grab car classifier project is inspired from the Grab "AI FOR S.E.A." competition
-<br />
-Name: Lim Ji Chen
-<br />
-Email: jasonakon@gmail.com
-<br />
+# Car Classifier
+Car classifier project is inspired from the Grab "AI FOR S.E.A." competition
+
 #### *Note: Please read the README.pdf for more detailed documentation and explanation.
 ## Introduction:
-This project inspired by Grab “AiForSea”, Computer Vision challenge to classify and recognise distinct car images based on a given dataset. Here, car make and models can be classified immediate with any input images that belong to the provided car class dataset family which are 196 in total. This project uses a lightweight model that allowed to produce faster result and accurate result at the same time. 
+Here, car make and models can be classified immediate with any input images that belong to the provided car class dataset family which are 196 in total. This project uses a lightweight model that allowed to produce faster result and accurate result at the same time. 
 <br />
 Thank you for giving such opportunity and let’s get ready to classify!
 <br />
